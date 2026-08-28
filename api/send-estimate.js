@@ -1,10 +1,31 @@
 import { Resend } from "resend"
 
-const resend = new Resend(
-    process.env.RESEND_API_KEY
-)
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export default async function handler(req, res) {
+
+    // CORS
+    res.setHeader(
+        "Access-Control-Allow-Origin",
+        "*"
+    )
+
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "POST, OPTIONS"
+    )
+
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type"
+    )
+
+    // Framer sends this first
+    if (req.method === "OPTIONS") {
+        return res.status(200).end()
+    }
+
+    // Only allow POST afterwards
     if (req.method !== "POST") {
         return res.status(405).json({
             error: "Method not allowed"
@@ -12,6 +33,7 @@ export default async function handler(req, res) {
     }
 
     try {
+
         const data = req.body
 
         const {
@@ -36,12 +58,15 @@ export default async function handler(req, res) {
         } = data
 
         const result = await resend.emails.send({
+
             from: "Audio Calculator <onboarding@resend.dev>",
 
-            // HIER DEINE E-MAIL-ADRESSE EINTRAGEN
-            to: ["masteredbymp@gmail.com"],
+            to: [
+                "DEINE-EMAIL@BEISPIEL.DE"
+            ],
 
-            subject: `New Audio Post Estimate – ${name}`,
+            subject:
+                `New Audio Post Estimate – ${name}`,
 
             html: `
                 <div style="
@@ -51,32 +76,61 @@ export default async function handler(req, res) {
                     color: #111;
                 ">
 
-                    <h1>New Audio Post Estimate</h1>
+                    <h1>
+                        New Audio Post Estimate
+                    </h1>
 
                     <h2>Client</h2>
 
                     <p>
-                        <strong>Name:</strong> ${name}<br>
-                        <strong>Email:</strong> ${email}
+                        <strong>Name:</strong>
+                        ${name}
+                        <br>
+
+                        <strong>Email:</strong>
+                        ${email}
                     </p>
 
                     <h2>Project</h2>
 
                     <p>
-                        <strong>Project Type:</strong> ${projectType}<br>
-                        <strong>Region:</strong> ${region}<br>
-                        <strong>Production Scale:</strong> ${scale}<br>
-                        <strong>Release:</strong> ${release}<br>
-                        <strong>Runtime:</strong> ${totalRuntime} min
+                        <strong>Project Type:</strong>
+                        ${projectType}
+                        <br>
+
+                        <strong>Region:</strong>
+                        ${region}
+                        <br>
+
+                        <strong>Production Scale:</strong>
+                        ${scale}
+                        <br>
+
+                        <strong>Release:</strong>
+                        ${release}
+                        <br>
+
+                        <strong>Runtime:</strong>
+                        ${totalRuntime} min
                     </p>
 
                     <h2>Production</h2>
 
                     <p>
-                        <strong>Complexity:</strong> ${complexity}<br>
-                        <strong>Deadline:</strong> ${deadline}<br>
-                        <strong>Revisions:</strong> ${revisions}<br>
-                        <strong>Audio Condition:</strong> ${audioCondition}
+                        <strong>Complexity:</strong>
+                        ${complexity}
+                        <br>
+
+                        <strong>Deadline:</strong>
+                        ${deadline}
+                        <br>
+
+                        <strong>Revisions:</strong>
+                        ${revisions}
+                        <br>
+
+                        <strong>Audio Condition:</strong>
+                        ${audioCondition}
                     </p>
 
                     <h2>Services</h2>
@@ -127,6 +181,9 @@ export default async function handler(req, res) {
         })
 
         if (result.error) {
+
+            console.error(result.error)
+
             return res.status(500).json({
                 error: result.error.message
             })
@@ -137,6 +194,7 @@ export default async function handler(req, res) {
         })
 
     } catch (error) {
+
         console.error(error)
 
         return res.status(500).json({
