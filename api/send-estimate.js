@@ -62,7 +62,7 @@ export default async function handler(req, res) {
             from: "Audio Calculator <onboarding@resend.dev>",
 
             to: [
-                "DEINE-EMAIL@BEISPIEL.DE"
+                "masteredbymp@gmail.com"
             ],
 
             subject:
