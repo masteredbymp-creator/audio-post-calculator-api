@@ -39,7 +39,7 @@ export default async function handler(req, res) {
             from: "Audio Calculator <onboarding@resend.dev>",
 
             // HIER DEINE E-MAIL-ADRESSE EINTRAGEN
-            to: ["DEINE-EMAIL@BEISPIEL.DE"],
+            to: ["masteredbymp@gmail.com"],
 
             subject: `New Audio Post Estimate – ${name}`,
 
